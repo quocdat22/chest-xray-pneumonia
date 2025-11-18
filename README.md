@@ -1,63 +1,63 @@
-# 🫁 Phát Hiện Viêm Phổi Từ Ảnh X-Ray
+# 🫁 Pneumonia Detection from Chest X-Ray Images
 
-Dự án này phát triển một mô hình deep learning CNN để phân loại hình ảnh X-ray phổi thành 2 lớp: **NORMAL** (phổi bình thường) và **PNEUMONIA** (phổi viêm phổi).
+This project develops a deep learning CNN model to classify chest X-ray images into 2 classes: **NORMAL** (healthy lungs) and **PNEUMONIA** (pneumonia-affected lungs).
 
-## 🎯 Mục Tiêu Dự Án
+## 🎯 Project Objectives
 
-- ✅ Xây dựng và huấn luyện mô hình CNN baseline hiệu quả
-- ✅ Đạt độ chính xác cao trong việc phát hiện viêm phổi
-- ✅ Triển khai Grad-CAM để giải thích quyết định của mô hình
-- ✅ Phân tích sâu các chỉ số Precision, Recall, F1-Score
-- ✅ Xử lý dữ liệu mất cân bằng bằng Class Weights
+- ✅ Build and train an efficient baseline CNN model
+- ✅ Achieve high accuracy in pneumonia detection
+- ✅ Implement Grad-CAM to explain model decisions
+- ✅ Perform in-depth analysis of Precision, Recall, and F1-Score metrics
+- ✅ Handle data imbalance using Class Weights
 
-## 📊 Dữ Liệu
+## 📊 Dataset
 
-### Nguồn Dữ Liệu
+### Data Source
 - **Dataset**: [Kaggle Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
-- **Tổng số ảnh**: ~5,800 ảnh X-ray
-- **Định dạng**: JPEG grayscale, kích thước 224×224 pixels
-- **Lớp**: 2 lớp (NORMAL vs PNEUMONIA)
-- **Tác giả Dataset**: Paul Mooney
+- **Total Images**: ~5,800 X-ray images
+- **Format**: JPEG grayscale, 224×224 pixels size
+- **Classes**: 2 classes (NORMAL vs PNEUMONIA)
+- **Dataset Author**: Paul Mooney
 
-### Phân Bố Dữ Liệu
+### Data Distribution
 
-| Tập | NORMAL | PNEUMONIA | Tổng |
-|-----|--------|-----------|------|
+| Set | NORMAL | PNEUMONIA | Total |
+|-----|--------|-----------|-------|
 | **Train** | ~3,300 | ~3,300 | ~6,600 |
 | **Validation** | ~370 | ~370 | ~740 |
 | **Test** | ~390 | ~390 | ~780 |
 
-![Phân bố dữ liệu](asset/phan_bo.png)
+![Data Distribution](asset/phan_bo.png)
 
-### Xử Lý Dữ Liệu Mất Cân Bằng
+### Handling Data Imbalance
 
-Sử dụng **Class Weights** để cân bằng 2 lớp:
+Using **Class Weights** to balance the 2 classes:
 - **NORMAL (Class 0)**: 1.939
 - **PNEUMONIA (Class 1)**: 0.674
 
-Phương pháp này tự động cân bằng ảnh hưởng của mỗi lớp trong quá trình huấn luyện mà không làm mất dữ liệu.
+This method automatically balances the influence of each class during training without losing data.
 
-## 🧠 Kiến Trúc Mô Hình
+## 🧠 Model Architecture
 
 ### Baseline CNN
-Mô hình bao gồm:
+The model consists of:
 
-**4 Conv Blocks** (mỗi block):
+**4 Conv Blocks** (each block):
 - 2 × Conv2D layers (32 → 64 → 128 → 256 filters)
-- BatchNormalization (chuẩn hóa đầu ra)
-- MaxPooling2D (2×2) - giảm chiều
-- Dropout (0.25) - tránh overfitting
+- BatchNormalization (output normalization)
+- MaxPooling2D (2×2) - dimension reduction
+- Dropout (0.25) - prevent overfitting
 
 **Dense Layers**:
-- Flatten - chuyển từ 2D sang 1D
+- Flatten - convert from 2D to 1D
 - Dense(512, relu) + BatchNorm + Dropout(0.5)
 - Dense(256, relu) + BatchNorm + Dropout(0.5)
 - Dense(1, sigmoid) → Output (0 = NORMAL, 1 = PNEUMONIA)
 
-### Thông Số Mô Hình
+### Model Parameters
 
-| Thuộc Tính | Giá Trị |
-|-----------|--------|
+| Attribute | Value |
+|-----------|-------|
 | **Input Shape** | 224 × 224 × 1 (grayscale) |
 | **Total Parameters** | 27,000,801 |
 | **Batch Size** | 32 |
@@ -67,12 +67,12 @@ Mô hình bao gồm:
 | **Early Stopping** | Yes (patience=10 on val_auc) |
 | **Regularization** | Dropout + BatchNormalization |
 
-## 📈 Kết Quả Training & Đánh Giá
+## 📈 Training Results & Evaluation
 
-### Hiệu Suất Trên Test Set
+### Performance on Test Set
 
-| Chỉ Số | Giá Trị |
-|-------|--------|
+| Metric | Value |
+|--------|-------|
 | **Accuracy** | 85.74% |
 | **Precision** | 82.65% |
 | **Recall** | 97.69% |
@@ -83,201 +83,201 @@ Mô hình bao gồm:
 
 ![Confusion Matrix](asset/confusion_matrix.png)
 
-Confusion matrix cho thấy:
-- **True Negatives (TN)**: Số ảnh NORMAL được dự đoán chính xác
-- **True Positives (TP)**: Số ảnh PNEUMONIA được dự đoán chính xác
-- **False Positives (FP)**: Số ảnh NORMAL bị dự đoán sai là PNEUMONIA
-- **False Negatives (FN)**: Số ảnh PNEUMONIA bị dự đoán sai là NORMAL (rất ít - chỉ 2.31%)
+Confusion matrix shows:
+- **True Negatives (TN)**: Number of NORMAL images correctly predicted
+- **True Positives (TP)**: Number of PNEUMONIA images correctly predicted
+- **False Positives (FP)**: Number of NORMAL images incorrectly predicted as PNEUMONIA
+- **False Negatives (FN)**: Number of PNEUMONIA images incorrectly predicted as NORMAL (very few - only 2.31%)
 
-### Giải Thích Chi Tiết Các Chỉ Số
+### Detailed Metric Explanations
 
-**📊 Accuracy (Độ Chính Xác)**
-- Tỷ lệ dự đoán đúng trên tổng số dự đoán
-- **85.74%** = Mô hình dự đoán đúng 85.74% test cases
+**📊 Accuracy (Overall Accuracy)**
+- Ratio of correct predictions to total predictions
+- **85.74%** = Model correctly predicts 85.74% of test cases
 
-**✅ Precision (Độ Chính Xác Dự Đoán Dương Tính)**
-- Trong số những ảnh mô hình dự đoán là "PNEUMONIA", **82.65%** thực sự mắc viêm phổi
-- **Ý nghĩa**: Khi mô hình cảnh báo "viêm phổi", bạn có thể tin tưởng 82.65%
-- **Ứng dụng**: Tránh cảnh báo sai alarm quá nhiều
+**✅ Precision (Positive Predictive Value)**
+- Among images the model predicts as "PNEUMONIA", **82.65%** truly have pneumonia
+- **Meaning**: When the model alerts "pneumonia", you can trust it 82.65%
+- **Application**: Avoids excessive false alarms
 
-**🔍 Recall (Độ Nhạy / Sensitivity)**
-- Trong số những ảnh thực sự mắc "PNEUMONIA", mô hình phát hiện được **97.69%**
-- **Ý nghĩa**: Mô hình rất ít bỏ sót các ca bệnh thực tế (chỉ bỏ sót ~2.31%)
-- **Quan trọng trong y tế**: Recall cao giảm nguy hiểm bỏ sót bệnh
-- **Trade-off**: Để có Recall cao, mô hình phải "dễ dãi" hơn, dẫn đến một số cảnh báo sai (Precision thấp hơn)
+**🔍 Recall (Sensitivity)**
+- Among images truly with "PNEUMONIA", the model detects **97.69%**
+- **Meaning**: The model rarely misses actual cases (only misses ~2.31%)
+- **Important in Healthcare**: High recall reduces the risk of missing diseases
+- **Trade-off**: To achieve high recall, the model must be more "lenient", resulting in some false alerts (lower precision)
 
 **🎯 AUC (Area Under Curve)**
-- **0.9516** cho biết mô hình có khả năng phân biệt 2 lớp rất tốt
-- Giá trị càng gần 1.0 càng tốt
+- **0.9516** indicates the model has excellent ability to distinguish between 2 classes
+- Values closer to 1.0 are better
 
 **⚖️ F1-Score**
-- **0.8954** là trung bình điều hòa của Precision và Recall
-- Đưa ra một đánh giá cân bằng về hiệu suất mô hình
-- Phù hợp khi muốn xem xét cả 2 metric
+- **0.8954** is the harmonic mean of Precision and Recall
+- Provides a balanced assessment of model performance
+- Suitable when considering both metrics equally
 
 ## 📈 ROC Curve & AUC Analysis
 
 ### ROC Curve (Receiver Operating Characteristic)
-Đường cong ROC hiển thị sự cân bằng giữa **True Positive Rate (Recall)** và **False Positive Rate** khi thay đổi threshold dự đoán.
+The ROC curve displays the balance between **True Positive Rate (Recall)** and **False Positive Rate** as the prediction threshold changes.
 
 ![ROC Curve - AUC = 0.9516](asset/ROC_curve.png)
 
-### Giải Thích ROC Curve
+### ROC Curve Explanation
 
 **📊 AUC (Area Under Curve) = 0.9516**
-- **Ý nghĩa**: Model có xác suất **95.16%** sẽ xếp hạng một ảnh PNEUMONIA cao hơn một ảnh NORMAL
-- **Giá trị tuyệt vời**: 
-  - 0.5 = Random (không tốt hơn ngẫu nhiên)
-  - 0.7 - 0.8 = Tốt
-  - 0.8 - 0.9 = Rất tốt
-  - 0.9 - 1.0 = Xuất sắc ✓
+- **Meaning**: Model has a **95.16%** probability of ranking a PNEUMONIA image higher than a NORMAL image
+- **Excellent Value**: 
+  - 0.5 = Random (no better than chance)
+  - 0.7 - 0.8 = Good
+  - 0.8 - 0.9 = Very Good
+  - 0.9 - 1.0 = Excellent ✓
 
 **🎯 Optimal Point**
-- Điểm tối ưu được đánh dấu trên đường cong (optimal threshold ≈ 0.946)
-- Tại điểm này, model đạt cân bằng tốt nhất giữa:
-  - TPR (True Positive Rate) = Recall cao
-  - FPR (False Positive Rate) = Cảnh báo sai thấp
+- Optimal point is marked on the curve (optimal threshold ≈ 0.946)
+- At this point, the model achieves the best balance between:
+  - TPR (True Positive Rate) = High Recall
+  - FPR (False Positive Rate) = Low False Alerts
 
 **📍 Diagonal Line (Random Classifier)**
-- Đường chéo màu đỏ đứt nét biểu diễn classifier ngẫu nhiên (AUC = 0.5)
-- Model của chúng ta nằm **rất cao trên đường chéo** ✓ → Hiệu suất vượt trội
+- The red dashed diagonal represents a random classifier (AUC = 0.5)
+- Our model lies **well above the diagonal** ✓ → Superior performance
 
-### Ứng Dụng trong Y Tế
-- **AUC cao** → Model phân biệt NORMAL và PNEUMONIA rất tốt
-- **Không quan tâm tới False Positive Rate** → Có thể dùng khi cần Recall cao
-- **Phù hợp khi data imbalanced** → Không bị ảnh hưởng bởi mất cân bằng lớp
+### Healthcare Application
+- **High AUC** → Model distinguishes NORMAL and PNEUMONIA excellently
+- **Disregards False Positive Rate** → Can be used when high recall is needed
+- **Suitable for imbalanced data** → Not affected by class imbalance
 
-## 📦 Kỹ Thuật Huấn Luyện
+## 📦 Training Techniques
 
 ### Early Stopping & Learning Rate Reduction
-- **Early Stopping**: Ngừng training khi `val_auc` không cải thiện trong 10 epoch liên tiếp
-- **ReduceLROnPlateau**: Giảm learning rate khi loss không giảm
-- **ModelCheckpoint**: Tự động lưu best model dựa trên val_auc cao nhất
+- **Early Stopping**: Stop training when `val_auc` doesn't improve for 10 consecutive epochs
+- **ReduceLROnPlateau**: Reduce learning rate when loss plateaus
+- **ModelCheckpoint**: Automatically save best model based on highest val_auc
 
-### Data Augmentation (Tăng Cường Dữ Liệu)
-- Rotation ±10 độ
+### Data Augmentation
+- Rotation ±10 degrees
 - Width/Height shift: ±10%
 - Shear: ±10%
 - Zoom: ±20%
-- Horizontal flip: Disabled (không lật ngang, vì X-ray y tế cần giữ nguyên)
+- Horizontal flip: Disabled (don't flip, medical X-rays must maintain orientation)
 
-Kỹ thuật này giúp mô hình tổng quát hóa tốt hơn và tránh overfitting trên tập training nhỏ.
+This technique helps the model generalize better and prevents overfitting on small training datasets.
 
-## 🔍 Grad-CAM: Giải Thích Quyết Định Mô Hình
+## 🔍 Grad-CAM: Explaining Model Decisions
 
-**Grad-CAM** (Gradient-weighted Class Activation Mapping) là kỹ thuật để trực quan hóa vùng ảnh mà mô hình tập trung để đưa ra quyết định.
+**Grad-CAM** (Gradient-weighted Class Activation Mapping) is a technique to visualize regions of an image that the model focuses on to make decisions.
 
-### Ý Nghĩa
-- Giúp hiểu mô hình "nhìn" vào đâu
-- Xác định các dấu hiệu y tế quan trọng
-- Tăng độ tin cậy khi áp dụng model trong thực tế
+### Significance
+- Helps understand where the model "looks"
+- Identifies important medical indicators
+- Increases confidence when applying model in practice
 
-### Kết Quả
-Notebook `Grad_CAM.ipynb` hiển thị:
-- Heatmap các vùng quan trọng trên ảnh PNEUMONIA
-- Giúp bác sĩ xác nhận quyết định của mô hình
-- Model tập trung vào các vùng có dấu hiệu bệnh lý
+### Results
+The `Grad_CAM.ipynb` notebook displays:
+- Heatmap of important regions on PNEUMONIA images
+- Helps doctors confirm model decisions
+- Model focuses on areas showing disease signs
 
-![Ví dụ dự đoán](asset/grad-cam.png)
+![Example Prediction](asset/grad-cam.png)
 
-## 📊 Phân Tích Precision vs Recall
+## 📊 Precision vs Recall Analysis
 
-### Trade-off Giữa 2 Chỉ Số
+### Trade-off Between 2 Metrics
 
-**Precision ↑ (Độ Chính Xác Cao)**
-- Mô hình "thận trọng" → chỉ dự đoán PNEUMONIA khi rất chắc chắn
-- Ít cảnh báo sai ✓
-- Nhưng bỏ sót nhiều ca bệnh ✗
+**Precision ↑ (High Accuracy)**
+- Model is "conservative" → predicts PNEUMONIA only when very confident
+- Few false alarms ✓
+- But misses many disease cases ✗
 
-**Recall ↑ (Độ Nhạy Cao)**
-- Mô hình "dễ dãi" → dự đoán PNEUMONIA nếu có khả năng
-- Phát hiện hầu hết ca bệnh ✓
-- Nhưng có nhiều cảnh báo sai ✗
+**Recall ↑ (High Sensitivity)**
+- Model is "lenient" → predicts PNEUMONIA if there's possibility
+- Detects most disease cases ✓
+- But produces many false alarms ✗
 
-### Lựa Chọn Trong Y Tế
+### Choice in Healthcare
 
-**Trong ứng dụng phát hiện bệnh, Recall được ưu tiên hơn Precision**
+**In disease detection applications, Recall is prioritized over Precision**
 
-Tại sao?
-- **Chi phí bỏ sót bệnh**: Rất cao (bệnh nhân không được chữa trị)
-- **Chi phí cảnh báo sai**: Thấp hơn (bệnh nhân có thể kiểm tra thêm)
+Why?
+- **Cost of missing disease**: Very high (patient doesn't receive treatment)
+- **Cost of false alert**: Lower (patient can get additional tests)
 
-**Mô hình này đạt được:**
-- Recall = 97.69% ✓ (Phát hiện gần như tất cả ca bệnh)
-- Precision = 82.65% ✓ (Cảnh báo sai có kiểm soát)
-- F1-Score = 0.8954 ✓ (Cân bằng tốt)
+**This model achieves:**
+- Recall = 97.69% ✓ (Detects nearly all disease cases)
+- Precision = 82.65% ✓ (Controlled false alerts)
+- F1-Score = 0.8954 ✓ (Good balance)
 
 
-## 🚀 Hướng Dẫn Nhanh Chạy Dự Án
+## 🚀 Quick Start Guide
 
-### 1️⃣ Chuẩn Bị Môi Trường
+### 1️⃣ Environment Setup
 
 ```bash
-# Cài đặt dependencies
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Chạy Ứng Dụng Web
+### 2️⃣ Run Web Application
 
 ```bash
-# Khởi động Streamlit app
+# Start Streamlit app
 streamlit run app.py
 ```
-Ứng dụng sẽ mở tại `http://localhost:8501`
+The application will open at `http://localhost:8501`
 
-### 3️⃣ Khám Phá Notebooks
+### 3️⃣ Explore Notebooks
 
-Mở các Jupyter Notebooks trong thư mục `notebooks/`:
-- **`notebook.ipynb`** - Training model CNN từ đầu
-- **`Grad_CAM.ipynb`** - Trực quan hóa Grad-CAM (giải thích quyết định)
-- **`AUC.ipynb`** - Phân tích ROC Curve & AUC
-- **`pre_rec.ipynb`** - Phân tích Precision vs Recall
-- **`push_model2hf.ipynb`** - Đẩy model lên Hugging Face
+Open Jupyter Notebooks in the `notebooks/` folder:
+- **`notebook.ipynb`** - Train CNN model from scratch
+- **`Grad_CAM.ipynb`** - Visualize Grad-CAM (explain decisions)
+- **`AUC.ipynb`** - Analyze ROC Curve & AUC
+- **`pre_rec.ipynb`** - Analyze Precision vs Recall
+- **`push_model2hf.ipynb`** - Push model to Hugging Face
 
-## 💡 Các Điểm Chính & Kết Luận
+## 💡 Key Points & Conclusion
 
-### 1. Hiệu Suất Mô Hình
-✅ **Recall rất cao (97.69%)** → Phát hiện được hầu hết các ca bệnh  
-✅ **Precision tốt (82.65%)** → Cảnh báo được kiểm soát  
-✅ **AUC vượt trội (0.9516)** → Khả năng phân biệt 2 lớp xuất sắc  
-✅ **Cân bằng giữa sensitivity & specificity** → Phù hợp cho y tế
+### 1. Model Performance
+✅ **Very High Recall (97.69%)** → Detects nearly all disease cases  
+✅ **Good Precision (82.65%)** → Controlled false alerts  
+✅ **Superior AUC (0.9516)** → Excellent class discrimination ability  
+✅ **Balanced sensitivity & specificity** → Suitable for healthcare
 
-### 2. Xử Lý Dữ Liệu Mất Cân Bằng
-✅ **Class Weights hiệu quả** → Tự động cân bằng 2 lớp  
-✅ **Giữ nguyên dữ liệu** → Không mất thông tin  
-✅ **Phù hợp bối cảnh y tế** → Sử dụng mọi ca lâm sàng
+### 2. Handling Data Imbalance
+✅ **Class Weights effective** → Automatically balances 2 classes  
+✅ **Preserves data** → No information loss  
+✅ **Suitable for healthcare context** → Uses all clinical cases
 
 ### 3. Regularization & Overfitting Prevention
-✅ **Dropout + BatchNormalization** → Tránh overfitting  
-✅ **Early Stopping** → Dừng tại điểm tối ưu (epoch 42)  
-✅ **Data Augmentation** → Tăng tính tổng quát hóa  
+✅ **Dropout + BatchNormalization** → Prevents overfitting  
+✅ **Early Stopping** → Stops at optimal point (epoch 42)  
+✅ **Data Augmentation** → Improves generalization  
 
 ### 4. Model Explainability
-✅ **Grad-CAM visualization** → Giải thích quyết định model  
-✅ **Precision-Recall analysis** → Hiểu các trade-off  
-✅ **Transparency** → Tin tưởng model trong y tế
+✅ **Grad-CAM visualization** → Explains model decisions  
+✅ **Precision-Recall analysis** → Understands trade-offs  
+✅ **Transparency** → Trust model in healthcare
 
-## 🔄 Quy Trình Dự Án
+## 🔄 Project Workflow
 
-**Chuẩn bị dữ liệu** → **Xây dựng model** → **Huấn luyện** → **Đánh giá** → **Phân tích** → **Triển khai**
+**Data Preparation** → **Model Building** → **Training** → **Evaluation** → **Analysis** → **Deployment**
 
-1. **Chuẩn bị dữ liệu** (notebook.ipynb)
-   - Load dataset Kaggle
-   - Chia train/val 9:1
-   - Phân tích và trực quan hóa
+1. **Data Preparation** (notebook.ipynb)
+   - Load Kaggle dataset
+   - Split train/val 9:1
+   - Analyze and visualize
 
-2. **Xây dựng & Huấn Luyện** (notebook.ipynb)
-   - Thiết kế CNN architecture
-   - Compile với metrics y tế
-   - Training với class weights
+2. **Building & Training** (notebook.ipynb)
+   - Design CNN architecture
+   - Compile with healthcare metrics
+   - Training with class weights
 
-3. **Đánh Giá & Phân Tích** (notebook.ipynb, Grad_CAM.ipynb, pre_rec.ipynb)
+3. **Evaluation & Analysis** (notebook.ipynb, Grad_CAM.ipynb, pre_rec.ipynb)
    - Test set evaluation
    - Confusion matrix
    - Grad-CAM visualization
    - Precision/Recall trade-off
 
-## 📚 Tài Liệu Tham Khảo
+## 📚 References
 
 ### Dataset
 - [Kaggle: Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
@@ -297,40 +297,40 @@ Mở các Jupyter Notebooks trong thư mục `notebooks/`:
 - [Keras API Reference - Class Weights](https://keras.io/api/models/sequential/#fit)
 - [Scikit-learn: Machine Learning Library](https://scikit-learn.org/)
 
-## ⚠️ Lưu Ý Quan Trọng
+## ⚠️ Important Disclaimer
 
 ### 🔴 Disclaimer
-Mô hình này được phát triển cho mục đích **học tập và nghiên cứu**.  
-**KHÔNG nên sử dụng trực tiếp trong chẩn đoán y tế thực tế**.  
-Bất kỳ quyết định y tế phải được xác nhận bởi chuyên gia y tế được đào tạo.
+This model is developed for **educational and research purposes only**.  
+**Should NOT be used directly for real medical diagnosis**.  
+Any medical decision must be confirmed by trained medical professionals.
 
-### 📌 Giới Hạn Mô Hình
-- Chỉ được huấn luyện trên dataset Kaggle
-- Kích thước ảnh cố định 224×224 pixels
-- Chỉ phân loại binary (NORMAL vs PNEUMONIA)
-- Có thể không tổng quát hóa tốt trên dữ liệu từ các bệnh viện khác
+### 📌 Model Limitations
+- Only trained on Kaggle dataset
+- Fixed image size 224×224 pixels
+- Only binary classification (NORMAL vs PNEUMONIA)
+- May not generalize well to data from other hospitals
 
-### ✅ Cách Sử Dụng An Toàn
-- **Sử dụng như công cụ hỗ trợ** quyết định, không thay thế bác sĩ
-- **Luôn kết hợp** với chẩn đoán lâm sàng của chuyên gia
-- **Kiểm tra Confidence Score** trước khi áp dụng
-- **Đặc biệt chú ý** đến False Negatives (bỏ sót bệnh)
+### ✅ Safe Usage Guidelines
+- **Use as a decision support tool**, not a replacement for doctors
+- **Always combine** with expert clinical diagnosis
+- **Check Confidence Score** before application
+- **Specially focus on** False Negatives (missed diseases)
 
-### 🏥 Khuyến Nghị Sử Dụng
-1. Coi model như "second opinion" tool
-2. Khi model dự đoán "NORMAL" với Confidence < 80% → Khuyến cáo kiểm tra lại
-3. Khi model dự đoán "PNEUMONIA" → Yêu cầu xác nhận từ bác sĩ
-4. Ghi nhận tất cả kết quả cho lý lịch bệnh nhân
+### 🏥 Usage Recommendations
+1. Treat model as a "second opinion" tool
+2. When model predicts "NORMAL" with Confidence < 80% → Recommend re-examination
+3. When model predicts "PNEUMONIA" → Require doctor confirmation
+4. Record all results in patient records
 
-## 📝 Thông Tin Dự Án
+## 📝 Project Information
 
-- **Ngày Tạo**: 18 tháng 11 năm 2025
+- **Creation Date**: November 18, 2025
 - **Model Timestamp**: 20251118_091549
-- **Mục Đích**: Giáo dục & Nghiên Cứu
+- **Purpose**: Education & Research
 - **Dataset**: Kaggle Chest X-Ray Images (Pneumonia)
 - **Framework**: TensorFlow/Keras
-- **GPU**: NVIDIA P100 (nếu có)
+- **GPU**: NVIDIA P100 (if available)
 
 ---
 
-**"Phòng ngừa hơn chữa trị" - Mô hình này là công cụ hỗ trợ, không thay thế bác sĩ** 🏥
+**"Prevention is better than cure" - This model is a support tool, not a doctor replacement** 🏥

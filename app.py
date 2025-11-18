@@ -24,7 +24,7 @@ INFO_FILENAME = "model_info.json"
 
 
 st.set_page_config(
-    page_title="Pneumonia Detection Grad-CAM", 
+    page_title="Pneumonia Detection with Grad-CAM", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -75,8 +75,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<h1 class="main-title">🫁 Phát Hiện Viêm Phổi</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Phân tích X-quang phổi bằng AI với hình ảnh hóa Grad-CAM</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">🫁 Pneumonia Detection</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">AI-powered Chest X-ray Analysis with Grad-CAM Visualization</p>', unsafe_allow_html=True)
 
 
 @st.cache_resource(show_spinner=False)
@@ -104,7 +104,7 @@ def load_model_artifacts():
             model_info = {}
 
     except Exception as e:
-        st.error(f"❌ Không thể tải model từ Hugging Face: {str(e)}")
+        st.error(f"❌ Failed to load model from Hugging Face: {str(e)}")
         st.stop()
 
     # Find last convolutional layer for Grad-CAM
@@ -227,22 +227,22 @@ def predict_and_visualize(image_source):
 
 
 with st.sidebar:
-    st.markdown("### 📤 Tải Ảnh")
+    st.markdown("### 📤 Upload Image")
     uploaded_file = st.file_uploader(
-        "Chọn ảnh X-quang phổi", 
+        "Select chest X-ray image", 
         type=["jpg", "jpeg", "png"],
-        help="Tải lên ảnh X-quang phổi để phát hiện viêm phổi"
+        help="Upload a chest X-ray image for pneumonia detection"
     )
     
     st.markdown("---")
-    use_sample = st.checkbox("📁 Sử dụng ảnh mẫu", value=True)
+    use_sample = st.checkbox("📁 Use Sample Image", value=True)
     
     st.markdown("---")
-    st.markdown("### ⚠️ Lưu Ý")
+    st.markdown("### ⚠️ Disclaimer")
     st.markdown("""
-    Kết quả chỉ mang tính **tham khảo**. 
+    Results are for **reference only**. 
     
-    Không thay thế cho chẩn đoán y khoa chuyên nghiệp.
+    Not a substitute for professional medical diagnosis.
     """)
 
     if uploaded_file:
@@ -254,10 +254,10 @@ with st.sidebar:
         selected_source = None
 
 if selected_source is None:
-    st.info("👈 Vui lòng tải lên ảnh hoặc bật tùy chọn ảnh mẫu để bắt đầu.")
+    st.info("👈 Please upload an image or enable the sample image option to get started.")
     st.stop()
 
-with st.spinner("🔍 Đang phân tích ảnh X-quang..."):
+with st.spinner("🔍 Analyzing chest X-ray..."):
     result = predict_and_visualize(selected_source)
 
 # Prediction result with styled box
@@ -268,13 +268,13 @@ icon = "⚠️" if predicted_class == "PNEUMONIA" else "✅"
 
 st.markdown(f"""
     <div class="prediction-box {box_class}">
-        <div class="prediction-label">Kết Quả Chẩn Đoán</div>
+        <div class="prediction-label">Diagnosis Result</div>
         <div class="prediction-value">{icon} {predicted_class}</div>
     </div>
 """, unsafe_allow_html=True)
 
 # Progress bar for confidence
-st.markdown(f"#### 📊 Mức Độ Tin Cậy: {confidence:.1%}")
+st.markdown(f"#### 📊 Confidence Score: {confidence:.1%}")
 st.progress(float(confidence))
 
 st.markdown("---")
@@ -282,27 +282,27 @@ st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### 🖼️ Ảnh X-quang Gốc")
+    st.markdown("### 🖼️ Original X-ray Image")
     st.image(result["pil_image"], use_container_width=True, clamp=True)
 
 with col2:
-    st.markdown("### 🔥 Bản Đồ Grad-CAM")
+    st.markdown("### 🔥 Grad-CAM Heatmap")
     st.image(result["overlay"], use_container_width=True)
-    st.caption("Vùng màu đỏ chỉ những khu vực có mức độ chú ý cao nhất của mô hình")
+    st.caption("Red regions indicate areas with the highest attention from the model")
 
 st.markdown("---")
 
 # Additional metrics in expandable section
-with st.expander("📈 Chi Tiết Dự Đoán"):
+with st.expander("📈 Prediction Details"):
     metric_cols = st.columns(3)
-    metric_cols[0].metric("Lớp Dự Đoán", result["predicted_class"])
-    metric_cols[1].metric("Điểm Tin Cậy", f"{result['confidence']:.2%}")
-    metric_cols[2].metric("Xác Suất Thô", f"{result['raw_prediction']:.4f}")
+    metric_cols[0].metric("Predicted Class", result["predicted_class"])
+    metric_cols[1].metric("Confidence Score", f"{result['confidence']:.2%}")
+    metric_cols[2].metric("Raw Probability", f"{result['raw_prediction']:.4f}")
     
-    st.markdown("##### Giải Thích:")
+    st.markdown("##### Explanation:")
     if predicted_class == "PNEUMONIA":
-        st.warning(f"⚠️ Mô hình phát hiện dấu hiệu **viêm phổi** với độ tin cậy {confidence:.1%}. Hình ảnh Grad-CAM cho thấy các vùng phổi ảnh hưởng đến kết quả dự đoán này.")
+        st.warning(f"⚠️ The model detected signs of **pneumonia** with {confidence:.1%} confidence. The Grad-CAM visualization shows the lung regions that influenced this prediction.")
     else:
-        st.success(f"✅ Mô hình chỉ ra tình trạng **phổi bình thường** với độ tin cậy {confidence:.1%}. Không phát hiện bất thường đáng kể ở các vùng được đánh dấu.")
+        st.success(f"✅ The model indicates **normal lungs** with {confidence:.1%} confidence. No significant abnormalities detected in the highlighted regions.")
 
 #st.caption("Model and Grad-CAM workflow replicated from notebooks/Grad_CAM.ipynb")
