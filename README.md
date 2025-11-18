@@ -21,6 +21,8 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 
 ### Data Distribution
 
+![Data Distribution](asset/overall.png)
+
 #### Original Dataset (Before Train/Val Split)
 
 | Split/Category | Train | Val | Test | **Total** |
@@ -38,12 +40,31 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 | **Total** | **4,708** | **524** | **624** | **5,856** |
 
 **Key Changes:**
-- ✅ Increased validation set from 16 to 524 images for better model evaluation
-- ✅ Maintained test set at 624 images for consistent performance assessment
-- ✅ Redistributed training set to 4,708 images with balanced representation
-- ✅ Better validation set size helps detect overfitting more reliably
+- Increased validation set from 16 to 524 images for better model evaluation
+- Maintained test set at 624 images for consistent performance assessment
+- Redistributed training set to 4,708 images with balanced representation
+- Better validation set size helps detect overfitting more reliably
 
-![Data Distribution](asset/phan_bo.png)
+
+
+### Image Size Distribution
+
+![Image Size Distribution](asset/image_distribution.png)
+
+All X-ray images in the dataset are standardized to **224×224 pixels** in grayscale format (1 channel). This uniform size ensures:
+- Consistent input for the CNN model
+- Reduced memory requirements during training
+- Efficient batch processing
+- Improved model generalization
+
+### Pixel Intensity Distribution
+
+![Pixel Intensity Distribution](asset/pixel_intensity.png)
+
+X-ray images exhibit similar pixel intensity patterns between NORMAL and PNEUMONIA classes, but with subtle differences:
+- **NORMAL images**: More uniform intensity distribution with lower variance
+- **PNEUMONIA images**: Higher intensity variations in affected lung areas
+- This distribution is normalized during preprocessing to improve model training
 
 ### Handling Data Imbalance
 
@@ -296,6 +317,8 @@ Open Jupyter Notebooks in the `notebooks/` folder:
 ## 📚 References
 
 ### Dataset
+- **Original Dataset**: Kermany, Daniel; Zhang, Kang; Goldbaum, Michael (2018), "Large Dataset of Labeled Optical Coherence Tomography (OCT) and Chest X-Ray Images", Mendeley Data, V3, doi: 10.17632/rscbjbr9sj.3
+- [Mendeley Data Source](https://data.mendeley.com/datasets/rscbjbr9sj/2)
 - [Kaggle: Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
 - [Original Research Paper](https://www.cell.com/cell/fulltext/S0092-8674(18)30154-5)
 
