@@ -21,11 +21,27 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 
 ### Data Distribution
 
-| Set | NORMAL | PNEUMONIA | Total |
-|-----|--------|-----------|-------|
-| **Train** | ~3,300 | ~3,300 | ~6,600 |
-| **Validation** | ~370 | ~370 | ~740 |
-| **Test** | ~390 | ~390 | ~780 |
+#### Original Dataset (Before Train/Val Split)
+
+| Split/Category | Train | Val | Test | **Total** |
+|:---|:---|:---|:---|:---|
+| **NORMAL** | 1,341 | 8 | 234 | **1,583** |
+| **PNEUMONIA** | 3,875 | 8 | 390 | **4,273** |
+| **Total** | **5,216** | **16** | **624** | **5,856** |
+
+#### After Train/Val Re-split (Final Distribution)
+
+| Split/Category | Train | Val | Test | **Total** |
+|:---|:---|:---|:---|:---|
+| **NORMAL** | 1,214 | 135 | 234 | **1,583** |
+| **PNEUMONIA** | 3,494 | 389 | 390 | **4,273** |
+| **Total** | **4,708** | **524** | **624** | **5,856** |
+
+**Key Changes:**
+- ✅ Increased validation set from 16 to 524 images for better model evaluation
+- ✅ Maintained test set at 624 images for consistent performance assessment
+- ✅ Redistributed training set to 4,708 images with balanced representation
+- ✅ Better validation set size helps detect overfitting more reliably
 
 ![Data Distribution](asset/phan_bo.png)
 
