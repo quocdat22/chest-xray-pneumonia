@@ -17,7 +17,7 @@ Dự án này phát triển một mô hình CNN học sâu để phân loại �
 - **Tổng số ảnh**: ~5,800 ảnh X-ray
 - **Định dạng**: JPEG grayscale, kích thước 224×224 pixels
 - **Lớp**: 2 lớp (BÌNH THƯỜNG vs VIÊM PHỔI)
-- **Tác giả Tập dữ liệu**: Paul Mooney
+
 
 ### Phân bố Dữ liệu
 

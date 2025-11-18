@@ -1,11 +1,7 @@
 tensorflow
-keras
 numpy
-pandas
-matplotlib
 pillow
-scikit-learn
-seaborn
-opencv-python
+opencv-python-headless
 streamlit
 huggingface_hub
+matplotlib

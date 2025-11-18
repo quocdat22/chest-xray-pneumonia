@@ -17,7 +17,6 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 - **Total Images**: ~5,800 X-ray images
 - **Format**: JPEG grayscale, 224×224 pixels size
 - **Classes**: 2 classes (NORMAL vs PNEUMONIA)
-- **Dataset Author**: Paul Mooney
 
 ### Data Distribution
 
