@@ -20,7 +20,7 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 
 ### Data Distribution
 
-![Data Distribution](asset/overall.png)
+![Data Distribution](assets/overall.png)
 
 #### Original Dataset (Before Train/Val Split)
 
@@ -48,7 +48,7 @@ This project develops a deep learning CNN model to classify chest X-ray images i
 
 ### Image Size Distribution
 
-![Image Size Distribution](asset/image_distribution.png)
+![Image Size Distribution](assets/image_distribution.png)
 
 All X-ray images in the dataset are standardized to **224×224 pixels** in grayscale format (1 channel). This uniform size ensures:
 - Consistent input for the CNN model
@@ -58,7 +58,7 @@ All X-ray images in the dataset are standardized to **224×224 pixels** in grays
 
 ### Pixel Intensity Distribution
 
-![Pixel Intensity Distribution](asset/pixel_intensity.png)
+![Pixel Intensity Distribution](assets/pixel_intensity.png)
 
 X-ray images exhibit similar pixel intensity patterns between NORMAL and PNEUMONIA classes, but with subtle differences:
 - **NORMAL images**: More uniform intensity distribution with lower variance
@@ -117,7 +117,7 @@ The model consists of:
 
 ### Confusion Matrix
 
-![Confusion Matrix](asset/confusion_matrix.png)
+![Confusion Matrix](assets/confusion_matrix.png)
 
 Confusion matrix shows:
 - **True Negatives (TN)**: Number of NORMAL images correctly predicted
@@ -156,7 +156,7 @@ Confusion matrix shows:
 ### ROC Curve (Receiver Operating Characteristic)
 The ROC curve displays the balance between **True Positive Rate (Recall)** and **False Positive Rate** as the prediction threshold changes.
 
-![ROC Curve - AUC = 0.9516](asset/ROC_curve.png)
+![ROC Curve - AUC = 0.9516](assets/ROC_curve.png)
 
 ### ROC Curve Explanation
 
@@ -214,7 +214,7 @@ The `Grad_CAM.ipynb` notebook displays:
 - Helps doctors confirm model decisions
 - Model focuses on areas showing disease signs
 
-![Example Prediction](asset/grad-cam.png)
+![Example Prediction](assets/grad-cam.png)
 
 ## 📊 Precision vs Recall Analysis
 
